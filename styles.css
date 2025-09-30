@@ -221,6 +221,72 @@ header h1 {
     color: #c0392b;
 }
 
+.versions-section {
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.versions-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.version-item {
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.version-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.version-number {
+    font-weight: bold;
+    color: #3498db;
+}
+
+.version-notes {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.version-download-link {
+    display: block;
+    margin: 0.25rem 0;
+    padding: 0.25rem 0.75rem;
+    background-color: #2ecc71;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.version-download-link:hover {
+    background-color: #27ae60;
+}
+
+.add-version-button {
+    padding: 0.5rem 1rem;
+    background-color: #9b59b6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.add-version-button:hover {
+    background-color: #8e44ad;
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -275,7 +341,9 @@ header h1 {
 }
 
 #game-form input[type="text"],
-#game-form textarea {
+#game-form textarea,
+#version-form input[type="text"],
+#version-form textarea {
     width: 100%;
     padding: 0.75rem;
     margin-bottom: 1rem;
@@ -284,22 +352,26 @@ header h1 {
     font-size: 1rem;
 }
 
-#game-form textarea {
+#game-form textarea,
+#version-form textarea {
     height: 100px;
     resize: vertical;
 }
 
-.download-link-input {
+.download-link-input,
+.version-download-link-input {
     display: flex;
     margin-bottom: 0.5rem;
 }
 
-.download-link-input input {
+.download-link-input input,
+.version-download-link-input input {
     flex-grow: 1;
     margin-right: 0.5rem;
 }
 
-.remove-link-button {
+.remove-link-button,
+.remove-version-link-button {
     background-color: #e74c3c;
     color: white;
     border: none;
@@ -308,7 +380,8 @@ header h1 {
     width: 2rem;
 }
 
-.remove-link-button:hover {
+.remove-link-button:hover,
+.remove-version-link-button:hover {
     background-color: #c0392b;
 }
 
