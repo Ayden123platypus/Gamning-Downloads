@@ -4,13 +4,15 @@ let games = [
         title: "Super Mario Bros. ROM Hack",
         description: "A fun ROM hack of the classic NES game.",
         tags: ["nes", "romhack"],
-        downloads: ["https://example.com/download1"]
+        downloads: ["https://example.com/download1"],
+        image: "https://via.placeholder.com/300x180?text=Super+Mario+Bros."
     },
     {
         title: "Sonic the Hedgehog",
         description: "The classic Genesis platformer.",
         tags: ["genesis"],
-        downloads: ["https://example.com/download2"]
+        downloads: ["https://example.com/download2"],
+        image: "https://via.placeholder.com/300x180?text=Sonic+the+Hedgehog"
     },
 ];
 
@@ -19,9 +21,9 @@ const ADMIN_PASSWORD = "yourpassword123";
 
 // DOM elements
 const gamesContainer = document.getElementById("games-container");
+const tagsContainer = document.getElementById("tags-container");
 const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
-const tags = document.querySelectorAll(".tag");
 const loginButton = document.getElementById("login-button");
 const addGameButton = document.getElementById("add-game-button");
 const loginModal = document.getElementById("login-modal");
@@ -42,6 +44,7 @@ function renderGames(filteredGames = games) {
         gameCard.className = "game-card";
         gameCard.innerHTML = `
             <button class="edit-button" data-index="${index}">✏️</button>
+            ${game.image ? `<img src="${game.image}" alt="${game.title}" class="game-image">` : ''}
             <h3>${game.title}</h3>
             <p>${game.description}</p>
             <div class="game-tags">
@@ -63,6 +66,39 @@ function renderGames(filteredGames = games) {
     });
 }
 
+// Render tags
+function renderTags() {
+    const allTags = ["all"];
+    games.forEach(game => {
+        game.tags.forEach(tag => {
+            if (!allTags.includes(tag)) {
+                allTags.push(tag);
+            }
+        });
+    });
+
+    tagsContainer.innerHTML = "";
+    allTags.forEach(tag => {
+        const tagElement = document.createElement("div");
+        tagElement.className = `tag ${tag === "all" ? "active" : ""}`;
+        tagElement.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+        tagElement.dataset.tag = tag;
+        tagElement.addEventListener("click", () => {
+            document.querySelectorAll(".tag").forEach(t => t.classList.remove("active"));
+            tagElement.classList.add("active");
+            const searchTerm = searchBar.value.toLowerCase();
+            const activeTag = tagElement.dataset.tag;
+            const filteredGames = games.filter(game =>
+                (game.title.toLowerCase().includes(searchTerm) ||
+                 game.description.toLowerCase().includes(searchTerm)) &&
+                (activeTag === "all" || game.tags.includes(activeTag))
+            );
+            renderGames(filteredGames);
+        });
+        tagsContainer.appendChild(tagElement);
+    });
+}
+
 // Search functionality
 searchButton.addEventListener("click", () => {
     const searchTerm = searchBar.value.toLowerCase();
@@ -73,22 +109,6 @@ searchButton.addEventListener("click", () => {
         (activeTag === "all" || game.tags.includes(activeTag))
     );
     renderGames(filteredGames);
-});
-
-// Tag filtering
-tags.forEach(tag => {
-    tag.addEventListener("click", () => {
-        tags.forEach(t => t.classList.remove("active"));
-        tag.classList.add("active");
-        const searchTerm = searchBar.value.toLowerCase();
-        const activeTag = tag.dataset.tag;
-        const filteredGames = games.filter(game =>
-            (game.title.toLowerCase().includes(searchTerm) ||
-             game.description.toLowerCase().includes(searchTerm)) &&
-            (activeTag === "all" || game.tags.includes(activeTag))
-        );
-        renderGames(filteredGames);
-    });
 });
 
 // Login modal
@@ -152,19 +172,34 @@ gameForm.addEventListener("submit", (e) => {
     const title = document.getElementById("game-title").value;
     const description = document.getElementById("game-description").value;
     const tags = document.getElementById("game-tags").value.split(",").map(tag => tag.trim());
+    const imageInput = document.getElementById("game-image");
     const downloadInputs = document.querySelectorAll(".download-link");
     const downloads = Array.from(downloadInputs).map(input => input.value);
     const editIndex = editIndexInput.value;
 
+    let imageUrl = null;
+    if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+        imageUrl = URL.createObjectURL(file);
+    }
+
     if (editIndex !== "") {
         // Edit existing game
-        games[editIndex] = { title, description, tags, downloads };
+        const existingGame = games[editIndex];
+        games[editIndex] = {
+            title,
+            description,
+            tags,
+            downloads,
+            image: imageUrl || existingGame.image
+        };
     } else {
         // Add new game
-        games.push({ title, description, tags, downloads });
+        games.push({ title, description, tags, downloads, image: imageUrl });
     }
 
     renderGames();
+    renderTags();
     gameModal.style.display = "none";
 });
 
@@ -201,3 +236,4 @@ function editGame(index) {
 
 // Initial render
 renderGames();
+renderTags();
