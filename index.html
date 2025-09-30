@@ -26,8 +26,8 @@
     </div>
 
     <div class="add-game-container">
-        <button id="login-button">Admin Login</button>
-        <button id="add-game-button" style="display: none;">+ Add New Game</button>
+        <button id="login-button" class="admin-login-button">Admin Login</button>
+        <button id="add-game-button" class="add-game-button" style="display: none;">+ Add New Game</button>
     </div>
 
     <div class="games-container" id="games-container">
@@ -41,22 +41,29 @@
             <h2>Admin Login</h2>
             <form id="login-form">
                 <input type="password" id="admin-password" placeholder="Enter admin password" required>
-                <button type="submit">Login</button>
+                <button type="submit" class="modal-button">Login</button>
             </form>
         </div>
     </div>
 
-    <!-- Add Game Modal -->
-    <div class="modal" id="add-modal">
+    <!-- Add/Edit Game Modal -->
+    <div class="modal" id="game-modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Add New Game</h2>
+            <h2 id="modal-title">Add New Game</h2>
             <form id="game-form">
                 <input type="text" id="game-title" placeholder="Title" required>
                 <textarea id="game-description" placeholder="Description" required></textarea>
                 <input type="text" id="game-tags" placeholder="Tags (comma-separated)" required>
-                <input type="url" id="game-download" placeholder="Download Link" required>
-                <button type="submit">Add Game</button>
+                <div id="download-links-container">
+                    <div class="download-link-input">
+                        <input type="url" class="download-link" placeholder="Download Link" required>
+                        <button type="button" class="remove-link-button" style="display: none;">×</button>
+                    </div>
+                </div>
+                <button type="button" id="add-link-button" class="add-link-button">+ Add Another Link</button>
+                <input type="hidden" id="edit-index">
+                <button type="submit" class="modal-button">Save Game</button>
             </form>
         </div>
     </div>
