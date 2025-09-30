@@ -25,7 +25,7 @@ let games = JSON.parse(localStorage.getItem("games")) || [
 ];
 
 // Admin password (set this to your desired password)
-const ADMIN_PASSWORD = "LittleJimm";
+const ADMIN_PASSWORD = "LittleJimmy";
 
 // Admin state
 let isAdminLoggedIn = false;
