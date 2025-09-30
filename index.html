@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Games & ROM Hacks</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Retro Games & ROM Hacks</h1>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search games...">
+            <button id="search-button"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="tags-container">
+        <div class="tag" data-tag="all">All</div>
+        <div class="tag" data-tag="nes">NES</div>
+        <div class="tag" data-tag="snes">SNES</div>
+        <div class="tag" data-tag="genesis">Genesis</div>
+        <div class="tag" data-tag="gba">GBA</div>
+        <div class="tag" data-tag="romhack">ROM Hack</div>
+    </div>
+
+    <div class="add-game-container">
+        <button id="add-game-button">+ Add New Game</button>
+    </div>
+
+    <div class="games-container" id="games-container">
+        <!-- Games will be added here dynamically -->
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Game</h2>
+            <form id="game-form">
+                <input type="text" id="game-title" placeholder="Title" required>
+                <textarea id="game-description" placeholder="Description" required></textarea>
+                <input type="text" id="game-tags" placeholder="Tags (comma-separated)" required>
+                <input type="url" id="game-download" placeholder="Download Link" required>
+                <button type="submit">Add Game</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
