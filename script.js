@@ -318,7 +318,7 @@ gameForm.addEventListener("submit", (e) => {
   const tags = document.getElementById("game-tags").value.split(",").map(tag => tag.trim());
   const imageInput = document.getElementById("game-image");
   const downloadInputs = document.querySelectorAll(".download-link");
-  const downloads = Array.from(downloadInputs).map(input => input.value);
+  const downloads = Array.from(downloadInputs).map(input => input.value).filter(link => link.trim() !== "");
   const editIndex = editIndexInput.value;
 
   let imageUrl = null;
@@ -380,17 +380,21 @@ function editGame(index) {
   document.getElementById("game-tags").value = game.tags.join(", ");
   editIndexInput.value = index;
 
+  // Clear existing download link inputs
   downloadLinksContainer.innerHTML = "";
+
+  // Add download link inputs for each existing download link
   game.downloads.forEach((link, i) => {
     const inputGroup = document.createElement("div");
     inputGroup.className = "download-link-input";
     inputGroup.innerHTML = `
       <input type="url" class="download-link" placeholder="Download Link" value="${link}" required>
-      <button type="button" class="remove-link-button" ${i === 0 ? 'style="display: none;"' : ''}>×</button>
+      <button type="button" class="remove-link-button" ${game.downloads.length <= 1 ? 'style="display: none;"' : ''}>×</button>
     `;
     downloadLinksContainer.appendChild(inputGroup);
 
-    if (i !== 0) {
+    // Add event listener to remove button if not the first link
+    if (game.downloads.length > 1) {
       inputGroup.querySelector(".remove-link-button").addEventListener("click", () => {
         downloadLinksContainer.removeChild(inputGroup);
       });
