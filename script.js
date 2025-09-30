@@ -1,5 +1,5 @@
-// Sample games data with versions
-let games = [
+// Load games from localStorage or use default
+let games = JSON.parse(localStorage.getItem("games")) || [
     {
         title: "Super Mario Bros. ROM Hack",
         description: "A fun ROM hack of the classic NES game.",
@@ -25,7 +25,7 @@ let games = [
 ];
 
 // Admin password (set this to your desired password)
-const ADMIN_PASSWORD = "LittleJimmy";
+const ADMIN_PASSWORD = "yourpassword123";
 
 // Admin state
 let isAdminLoggedIn = false;
@@ -61,8 +61,8 @@ function renderGames(filteredGames = games) {
         const gameCard = document.createElement("div");
         gameCard.className = "game-card";
         gameCard.innerHTML = `
-            <button class="edit-button" data-index="${index}" ${!isAdminLoggedIn ? 'style="display: none;"' : ''}>✏️</button>
-            <button class="delete-button" data-index="${index}" ${!isAdminLoggedIn ? 'style="display: none;"' : ''}>🗑️</button>
+            <button class="edit-button" data-index="${index}" style="${isAdminLoggedIn ? 'display: block;' : 'display: none;'}">✏️</button>
+            <button class="delete-button" data-index="${index}" style="${isAdminLoggedIn ? 'display: block;' : 'display: none;'}">🗑️</button>
             ${game.image ? `<img src="${game.image}" alt="${game.title}" class="game-image">` : ''}
             <h3>${game.title}</h3>
             <p>${game.description}</p>
@@ -139,6 +139,7 @@ function renderGames(filteredGames = games) {
 // Delete game
 function deleteGame(index) {
     games.splice(index, 1);
+    saveGames();
     renderGames();
     renderTags();
 }
@@ -336,6 +337,7 @@ gameForm.addEventListener("submit", (e) => {
         games.push({ title, description, tags, downloads, image: imageUrl, versions: [] });
     }
 
+    saveGames();
     renderGames();
     renderTags();
     gameModal.style.display = "none";
@@ -359,6 +361,7 @@ versionForm.addEventListener("submit", (e) => {
         games[gameIndex].versions.push({ number, notes, downloads });
     }
 
+    saveGames();
     renderGames();
     versionModal.style.display = "none";
 });
@@ -390,6 +393,11 @@ function editGame(index) {
 
     modalTitle.textContent = "Edit Game";
     gameModal.style.display = "flex";
+}
+
+// Save games to localStorage
+function saveGames() {
+    localStorage.setItem("games", JSON.stringify(games));
 }
 
 // Initial render
