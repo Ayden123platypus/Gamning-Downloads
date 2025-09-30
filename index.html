@@ -68,6 +68,28 @@
         </div>
     </div>
 
+    <!-- Add/Edit Version Modal -->
+    <div class="modal" id="version-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="version-modal-title">Add New Version</h2>
+            <form id="version-form">
+                <input type="text" id="version-number" placeholder="Version (e.g., v1.0)" required>
+                <textarea id="version-notes" placeholder="Release notes" required></textarea>
+                <div id="version-download-links-container">
+                    <div class="download-link-input">
+                        <input type="url" class="version-download-link" placeholder="Download Link" required>
+                        <button type="button" class="remove-version-link-button" style="display: none;">×</button>
+                    </div>
+                </div>
+                <button type="button" id="add-version-link-button" class="add-link-button">+ Add Another Link</button>
+                <input type="hidden" id="version-game-index">
+                <input type="hidden" id="version-edit-index">
+                <button type="submit" class="modal-button">Save Version</button>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
