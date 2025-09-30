@@ -1,5 +1,3 @@
-let isAdminLoggedIn = false;
-
 // Load games from localStorage or use default
 let games = JSON.parse(localStorage.getItem("games")) || [
     {
