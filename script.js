@@ -19,6 +19,9 @@ let games = [
 // Admin password (set this to your desired password)
 const ADMIN_PASSWORD = "yourpassword123";
 
+// Admin state
+let isAdminLoggedIn = false;
+
 // DOM elements
 const gamesContainer = document.getElementById("games-container");
 const tagsContainer = document.getElementById("tags-container");
@@ -43,7 +46,8 @@ function renderGames(filteredGames = games) {
         const gameCard = document.createElement("div");
         gameCard.className = "game-card";
         gameCard.innerHTML = `
-            <button class="edit-button" data-index="${index}">✏️</button>
+            <button class="edit-button" data-index="${index}" ${!isAdminLoggedIn ? 'style="display: none;"' : ''}>✏️</button>
+            <button class="delete-button" data-index="${index}" ${!isAdminLoggedIn ? 'style="display: none;"' : ''}>🗑️</button>
             ${game.image ? `<img src="${game.image}" alt="${game.title}" class="game-image">` : ''}
             <h3>${game.title}</h3>
             <p>${game.description}</p>
@@ -64,6 +68,23 @@ function renderGames(filteredGames = games) {
             editGame(index);
         });
     });
+
+    // Add event listeners to delete buttons
+    document.querySelectorAll(".delete-button").forEach(button => {
+        button.addEventListener("click", () => {
+            const index = parseInt(button.dataset.index);
+            if (confirm("Are you sure you want to delete this game?")) {
+                deleteGame(index);
+            }
+        });
+    });
+}
+
+// Delete game
+function deleteGame(index) {
+    games.splice(index, 1);
+    renderGames();
+    renderTags();
 }
 
 // Render tags
@@ -129,8 +150,10 @@ loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const password = document.getElementById("admin-password").value;
     if (password === ADMIN_PASSWORD) {
+        isAdminLoggedIn = true;
         loginModal.style.display = "none";
         addGameButton.style.display = "inline-block";
+        renderGames(); // Re-render games to show edit and delete buttons
     } else {
         alert("Incorrect password!");
     }
