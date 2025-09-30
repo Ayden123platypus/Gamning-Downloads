@@ -15,7 +15,7 @@ let games = [
 ];
 
 // Admin password (set this to your desired password)
-const ADMIN_PASSWORD = "LittleJimmy";
+const ADMIN_PASSWORD = "yourpassword123";
 
 // DOM elements
 const gamesContainer = document.getElementById("games-container");
