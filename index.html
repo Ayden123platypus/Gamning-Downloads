@@ -17,7 +17,7 @@
     </header>
 
     <div class="tags-container">
-        <div class="tag" data-tag="all">All</div>
+        <div class="tag active" data-tag="all">All</div>
         <div class="tag" data-tag="nes">NES</div>
         <div class="tag" data-tag="snes">SNES</div>
         <div class="tag" data-tag="genesis">Genesis</div>
@@ -26,14 +26,28 @@
     </div>
 
     <div class="add-game-container">
-        <button id="add-game-button">+ Add New Game</button>
+        <button id="login-button">Admin Login</button>
+        <button id="add-game-button" style="display: none;">+ Add New Game</button>
     </div>
 
     <div class="games-container" id="games-container">
         <!-- Games will be added here dynamically -->
     </div>
 
-    <div class="modal" id="modal">
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <input type="password" id="admin-password" placeholder="Enter admin password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Game Modal -->
+    <div class="modal" id="add-modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Add New Game</h2>
