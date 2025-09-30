@@ -25,7 +25,7 @@ let games = [
 ];
 
 // Admin password (set this to your desired password)
-const ADMIN_PASSWORD = "LittleJimmy";
+const ADMIN_PASSWORD = "yourpassword123";
 
 // Admin state
 let isAdminLoggedIn = false;
