@@ -318,7 +318,9 @@ gameForm.addEventListener("submit", (e) => {
   const tags = document.getElementById("game-tags").value.split(",").map(tag => tag.trim());
   const imageInput = document.getElementById("game-image");
   const downloadInputs = document.querySelectorAll(".download-link");
-  const downloads = Array.from(downloadInputs).map(input => input.value).filter(link => link.trim() !== "");
+  const downloads = Array.from(downloadInputs)
+    .map(input => input.value)
+    .filter(link => link.trim() !== ""); // Remove empty links
   const editIndex = editIndexInput.value;
 
   let imageUrl = null;
@@ -346,7 +348,7 @@ gameForm.addEventListener("submit", (e) => {
   saveGames();
   renderGames();
   renderTags();
-  gameModal.style.display = "none";
+  gameModal.style.display = "none"; // Close the modal after submission
 });
 
 // Version form submission
@@ -357,7 +359,9 @@ versionForm.addEventListener("submit", (e) => {
   const number = document.getElementById("version-number").value;
   const notes = document.getElementById("version-notes").value;
   const versionDownloadInputs = document.querySelectorAll(".version-download-link");
-  const downloads = Array.from(versionDownloadInputs).map(input => input.value);
+  const downloads = Array.from(versionDownloadInputs)
+    .map(input => input.value)
+    .filter(link => link.trim() !== ""); // Remove empty links
 
   if (versionIndex !== "") {
     // Edit existing version
@@ -369,7 +373,7 @@ versionForm.addEventListener("submit", (e) => {
 
   saveGames();
   renderGames();
-  versionModal.style.display = "none";
+  versionModal.style.display = "none"; // Close the modal after submission
 });
 
 // Edit game
