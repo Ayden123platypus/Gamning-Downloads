@@ -12,6 +12,7 @@ if (!Array.isArray(games) || games.length === 0) {
       image: "https://via.placeholder.com/300x180?text=Super+Mario+Bros.",
       versions: [
         {
+          label: "Initial Release",
           number: "v1.0",
           notes: "Initial release with 5 new levels.",
           downloads: ["https://example.com/download1_v1"]
@@ -31,7 +32,7 @@ if (!Array.isArray(games) || games.length === 0) {
 }
 
 // Admin password (change this to your desired password)
-const ADMIN_PASSWORD = "LittleJimmy";
+const ADMIN_PASSWORD = "yourpassword123";
 
 // Admin state
 let isAdminLoggedIn = false;
@@ -85,6 +86,7 @@ function renderGames(filteredGames = games) {
             game.versions.map((version, versionIndex) => `
               <div class="version-item">
                 <div class="version-header">
+                  <div class="version-label">${version.label}</div>
                   <div class="version-number">${version.number}</div>
                   ${isAdminLoggedIn ?
                     `<button class="edit-version-button" data-game-index="${index}" data-version-index="${versionIndex}">✏️</button>` : ''}
@@ -97,7 +99,7 @@ function renderGames(filteredGames = games) {
                 </div>
               </div>
             `).join("")
-          : '<div class="version-item">No older versions available.</div>'}
+          : '<div class="version-item">No versions available.</div>'}
         </div>
         ${isAdminLoggedIn ?
           `<button class="add-version-button" data-game-index="${index}">+ Add Version</button>` : ''}
@@ -171,6 +173,7 @@ function editVersion(gameIndex, versionIndex) {
   versionModalTitle.textContent = "Edit Version";
   versionGameIndexInput.value = gameIndex;
   versionEditIndexInput.value = versionIndex;
+  document.getElementById("version-label").value = version.label;
   document.getElementById("version-number").value = version.number;
   document.getElementById("version-notes").value = version.notes;
 
@@ -329,6 +332,12 @@ gameForm.addEventListener("submit", (e) => {
     imageUrl = URL.createObjectURL(file);
   }
 
+  // Add the current version as the latest version
+  const latestVersionLabel = "Latest Version";
+  const latestVersionNumber = "v" + (games.length + 1) + ".0";
+  const latestVersionNotes = "Latest release.";
+  const latestVersionDownloads = downloads;
+
   if (editIndex !== "") {
     // Edit existing game
     const existingGame = games[editIndex];
@@ -336,13 +345,32 @@ gameForm.addEventListener("submit", (e) => {
       title,
       description,
       tags,
-      downloads,
+      downloads: latestVersionDownloads,
       image: imageUrl || existingGame.image,
       versions: existingGame.versions || []
     };
+    // Add the latest version to the versions list
+    games[editIndex].versions.unshift({
+      label: latestVersionLabel,
+      number: latestVersionNumber,
+      notes: latestVersionNotes,
+      downloads: latestVersionDownloads
+    });
   } else {
     // Add new game
-    games.push({ title, description, tags, downloads, image: imageUrl, versions: [] });
+    games.push({
+      title,
+      description,
+      tags,
+      downloads: latestVersionDownloads,
+      image: imageUrl,
+      versions: [{
+        label: latestVersionLabel,
+        number: latestVersionNumber,
+        notes: latestVersionNotes,
+        downloads: latestVersionDownloads
+      }]
+    });
   }
 
   saveGames();
@@ -356,6 +384,7 @@ versionForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const gameIndex = parseInt(versionGameIndexInput.value);
   const versionIndex = versionEditIndexInput.value;
+  const label = document.getElementById("version-label").value;
   const number = document.getElementById("version-number").value;
   const notes = document.getElementById("version-notes").value;
   const versionDownloadInputs = document.querySelectorAll(".version-download-link");
@@ -365,10 +394,10 @@ versionForm.addEventListener("submit", (e) => {
 
   if (versionIndex !== "") {
     // Edit existing version
-    games[gameIndex].versions[versionIndex] = { number, notes, downloads };
+    games[gameIndex].versions[versionIndex] = { label, number, notes, downloads };
   } else {
     // Add new version
-    games[gameIndex].versions.push({ number, notes, downloads });
+    games[gameIndex].versions.push({ label, number, notes, downloads });
   }
 
   saveGames();
@@ -413,6 +442,14 @@ function editGame(index) {
 function saveGames() {
   localStorage.setItem("games", JSON.stringify(games));
 }
+
+// Add label input to version modal
+const versionLabelInput = document.createElement("input");
+versionLabelInput.type = "text";
+versionLabelInput.id = "version-label";
+versionLabelInput.placeholder = "Version Label (e.g., Beta Release)";
+versionLabelInput.required = true;
+versionForm.insertBefore(versionLabelInput, versionForm.querySelector("#version-number"));
 
 // Initial render
 renderGames();
