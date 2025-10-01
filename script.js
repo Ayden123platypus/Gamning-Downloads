@@ -32,7 +32,7 @@ if (!Array.isArray(games) || games.length === 0) {
 }
 
 // Admin password (change this to your desired password)
-const ADMIN_PASSWORD = "yourpassword123";
+const ADMIN_PASSWORD = "LittleJimmy";
 
 // Admin state
 let isAdminLoggedIn = false;
