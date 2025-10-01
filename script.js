@@ -323,10 +323,11 @@ gameForm.addEventListener("submit", (e) => {
   const downloadInputs = document.querySelectorAll(".download-link");
   const downloads = Array.from(downloadInputs)
     .map(input => input.value)
-    .filter(link => link.trim() !== ""); // Remove empty links
+    .filter(link => link.trim() !== "");
   const editIndex = editIndexInput.value;
 
-  let imageUrl = null;
+  let imageUrl = games[editIndex]?.image; // Default to existing image if editing
+
   if (imageInput.files.length > 0) {
     const file = imageInput.files[0];
     imageUrl = URL.createObjectURL(file);
@@ -334,28 +335,38 @@ gameForm.addEventListener("submit", (e) => {
 
   // Add the current version as the latest version
   const latestVersionLabel = "Latest Version";
-  const latestVersionNumber = "v" + (games.length + 1) + ".0";
+  const latestVersionNumber = "v" + (games.length + (editIndex !== "" ? 0 : 1)) + ".0";
   const latestVersionNotes = "Latest release.";
   const latestVersionDownloads = downloads;
 
   if (editIndex !== "") {
     // Edit existing game
-    const existingGame = games[editIndex];
     games[editIndex] = {
       title,
       description,
       tags,
       downloads: latestVersionDownloads,
-      image: imageUrl || existingGame.image,
-      versions: existingGame.versions || []
+      image: imageUrl,
+      versions: games[editIndex].versions || []
     };
     // Add the latest version to the versions list
-    games[editIndex].versions.unshift({
-      label: latestVersionLabel,
-      number: latestVersionNumber,
-      notes: latestVersionNotes,
-      downloads: latestVersionDownloads
-    });
+    if (games[editIndex].versions.length === 0 ||
+        games[editIndex].versions[0].number !== latestVersionNumber) {
+      games[editIndex].versions.unshift({
+        label: latestVersionLabel,
+        number: latestVersionNumber,
+        notes: latestVersionNotes,
+        downloads: latestVersionDownloads
+      });
+    } else {
+      // Update the latest version
+      games[editIndex].versions[0] = {
+        label: latestVersionLabel,
+        number: latestVersionNumber,
+        notes: latestVersionNotes,
+        downloads: latestVersionDownloads
+      };
+    }
   } else {
     // Add new game
     games.push({
@@ -376,33 +387,7 @@ gameForm.addEventListener("submit", (e) => {
   saveGames();
   renderGames();
   renderTags();
-  gameModal.style.display = "none"; // Close the modal after submission
-});
-
-// Version form submission
-versionForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const gameIndex = parseInt(versionGameIndexInput.value);
-  const versionIndex = versionEditIndexInput.value;
-  const label = document.getElementById("version-label").value;
-  const number = document.getElementById("version-number").value;
-  const notes = document.getElementById("version-notes").value;
-  const versionDownloadInputs = document.querySelectorAll(".version-download-link");
-  const downloads = Array.from(versionDownloadInputs)
-    .map(input => input.value)
-    .filter(link => link.trim() !== ""); // Remove empty links
-
-  if (versionIndex !== "") {
-    // Edit existing version
-    games[gameIndex].versions[versionIndex] = { label, number, notes, downloads };
-  } else {
-    // Add new version
-    games[gameIndex].versions.push({ label, number, notes, downloads });
-  }
-
-  saveGames();
-  renderGames();
-  versionModal.style.display = "none"; // Close the modal after submission
+  gameModal.style.display = "none";
 });
 
 // Edit game
@@ -441,6 +426,7 @@ function editGame(index) {
 // Save games to localStorage
 function saveGames() {
   localStorage.setItem("games", JSON.stringify(games));
+  console.log("Games saved:", games); // Debugging line
 }
 
 // Add label input to version modal
